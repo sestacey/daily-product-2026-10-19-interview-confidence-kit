@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Interview Confidence Kit — Diagnostic · Generator · Validator</title>
+<style>
+:root{
+  --bg:#0f1420; --card:#18202f; --card2:#1e2839; --line:#2b3a52;
+  --txt:#eef2f9; --mut:#a7b4c9; --acc:#4f9dff; --acc2:#7c5cff;
+  --good:#35c97e; --warn:#ffb224; --bad:#ff6b6b; --radius:14px;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  background:radial-gradient(1200px 600px at 20% -10%,#1b2a45 0%,var(--bg) 55%) fixed,var(--bg);color:var(--txt);line-height:1.55}
+.wrap{max-width:920px;margin:0 auto;padding:28px 18px 80px}
+header.hero{background:linear-gradient(135deg,#16233a,#101827);border:1px solid var(--line);border-radius:20px;padding:30px 28px;margin-bottom:22px}
+header.hero h1{margin:0 0 6px;font-size:30px;letter-spacing:-.5px}
+header.hero p{margin:0;color:var(--mut);max-width:640px}
+.badge{display:inline-block;background:linear-gradient(90deg,var(--acc),var(--acc2));color:#fff;font-size:12px;font-weight:700;
+  padding:4px 12px;border-radius:999px;margin-bottom:12px;letter-spacing:.4px}
+nav.tabs{display:flex;gap:8px;margin:0 0 20px;flex-wrap:wrap}
+nav.tabs button{flex:1;min-width:150px;background:var(--card);border:1px solid var(--line);color:var(--mut);
+  padding:12px 10px;border-radius:var(--radius);font-size:15px;font-weight:700;cursor:pointer;transition:.15s}
+nav.tabs button.active{background:linear-gradient(135deg,var(--acc),var(--acc2));color:#fff;border-color:transparent}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:24px;margin-bottom:18px}
+.card h2{margin:0 0 4px;font-size:22px}
+.card h3{margin:22px 0 8px;font-size:17px;color:#dfe7f5}
+.sub{color:var(--mut);margin:0 0 14px;font-size:14px}
+label.q{display:block;background:var(--card2);border:1px solid var(--line);border-radius:10px;padding:14px;margin:10px 0;cursor:pointer}
+label.q .qt{font-weight:600;margin-bottom:10px;display:block}
+.opts{display:flex;gap:8px;flex-wrap:wrap}
+.opts label{display:flex;align-items:center;gap:6px;background:#141c2b;border:1px solid var(--line);border-radius:8px;
+  padding:8px 12px;font-size:13px;cursor:pointer;color:var(--mut)}
+.opts input{accent-color:var(--acc)}
+input[type=text],input[type=number],textarea,select{width:100%;background:#101724;border:1px solid var(--line);
+  color:var(--txt);border-radius:10px;padding:11px 12px;font-size:14px;margin:6px 0 12px;font-family:inherit}
+textarea{min-height:84px;resize:vertical}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:0 16px}
+@media(max-width:640px){.grid2{grid-template-columns:1fr}}
+.btn{background:linear-gradient(135deg,var(--acc),var(--acc2));color:#fff;border:0;border-radius:10px;
+  padding:13px 22px;font-size:15px;font-weight:700;cursor:pointer;margin:8px 6px 0 0}
+.btn.ghost{background:#141c2b;border:1px solid var(--line);color:var(--txt)}
+.btn.small{padding:8px 14px;font-size:13px}
+.output{background:#0c121d;border:1px dashed var(--acc);border-radius:10px;padding:18px;margin-top:14px;white-space:pre-wrap;font-size:15px}
+.scoreRing{width:170px;height:170px;border-radius:50%;margin:10px auto;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  font-size:44px;font-weight:800;border:10px solid var(--acc);background:#0c121d}
+.dim{margin:10px 0}
+.dim .bar{height:10px;background:#101724;border-radius:6px;overflow:hidden}
+.dim .fill{height:100%;border-radius:6px;background:linear-gradient(90deg,var(--acc),var(--good))}
+.dim .lbl{display:flex;justify-content:space-between;font-size:14px;margin-bottom:4px}
+.tag{display:inline-block;background:#24314a;border:1px solid var(--line);color:var(--mut);font-size:12px;border-radius:999px;padding:3px 10px;margin:2px 4px 2px 0}
+.story{background:var(--card2);border:1px solid var(--line);border-radius:10px;padding:14px;margin:10px 0}
+.story .del{float:right;background:none;border:0;color:var(--bad);cursor:pointer;font-size:16px}
+.check{display:flex;gap:10px;align-items:flex-start;background:var(--card2);border:1px solid var(--line);
+  border-radius:10px;padding:12px 14px;margin:8px 0;cursor:pointer}
+.check input{margin-top:4px;accent-color:var(--good);transform:scale(1.25)}
+.check.done{opacity:.55;text-decoration:line-through}
+.prog{height:12px;background:#101724;border-radius:7px;overflow:hidden;margin:8px 0 4px}
+.prog>div{height:100%;background:linear-gradient(90deg,var(--good),var(--acc));width:0;transition:.3s}
+.small{font-size:13px;color:var(--mut)}
+.hidden{display:none}
+footer{color:var(--mut);font-size:12px;text-align:center;margin-top:40px}
+@media print{nav.tabs,.btn,header.hero{display:none}.card{break-inside:avoid}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="hero">
+  <div class="badge">INTERVIEW CONFIDENCE KIT · $25 EDITION</div>
+  <h1>Walk in ready. Walk out paid.</h1>
+  <p>A 3-part interactive system: <b>diagnose</b> your readiness in 2 minutes, <b>generate</b> your pitch + stories + counter-offer scripts, then <b>validate</b> your setup and offer before you sign. Everything saves in your browser — no account, no cloud.</p>
+</header>
+
+<nav class="tabs">
+  <button id="tab1" class="active" onclick="show('p1','tab1')">① Diagnostic</button>
+  <button id="tab2" onclick="show('p2','tab2')">② Generators</button>
+  <button id="tab3" onclick="show('p3','tab3')">③ Validator</button>
+</nav>
+
+<!-- ============ PART 1: DIAGNOSTIC ============ -->
+<section id="p1" class="card">
+  <h2>① Readiness Diagnostic</h2>
+  <p class="sub">Answer honestly — 10 questions, ~2 minutes. You'll get a readiness score, your anxiety triggers, and the exact generator to use first.</p>
+  <div id="quiz"></div>
+  <button class="btn" onclick="scoreQuiz()">Get my readiness score</button>
+  <button class="btn ghost" onclick="resetQuiz()">Reset</button>
+  <div id="scoreOut" class="hidden"></div>
+</section>
+
+<!-- ============ PART 2: GENERATORS ============ -->
+<section id="p2" class="card hidden">
+  <h2>② Generators</h2>
+  <p class="sub">Fill in the blanks. Copy-paste-ready output, built from what you typed.</p>
+
+  <h3>60-Second Pitch Builder</h3>
+  <div class="grid2">
+    <div><label class="small">Your name<input type="text" id="p_name" placeholder="Alex Rivera"></label></div>
+    <div><label class="small">Role you're applying for<input type="text" id="p_role" placeholder="Senior Product Designer"></label></div>
+    <div><label class="small">Years of relevant experience<input type="number" id="p_years" placeholder="6"></label></div>
+    <div><label class="small">One big win (with a number)<input type="text" id="p_win" placeholder="cut onboarding drop-off 38%"></label></div>
+  </div>
+  <label class="small">Why this company (one sentence)<input type="text" id="p_why" placeholder="because you ship design-led growth, which is exactly what I do"></label>
+  <button class="btn" onclick="genPitch()">Generate my pitch</button>
+  <div id="pitchOut" class="output hidden"></div>
+  <button id="pitchCopy" class="btn ghost small hidden" onclick="copyOut('pitchOut')">Copy pitch</button>
+
+  <h3>STAR Story Bank</h3>
+  <p class="sub">Bank 3–5 stories. Generators turn them into answers on demand.</p>
+  <div class="grid2">
+    <div><label class="small">Skill this story proves<input type="text" id="s_skill" placeholder="leading under pressure"></label></div>
+    <div><label class="small">Question it answers<input type="text" id="s_q" placeholder="Tell me about a tough deadline"></label></div>
+  </div>
+  <label class="small">Situation + Task<textarea id="s_st" placeholder="Our launch was 2 weeks out and the lead dev quit…"></textarea></label>
+  <label class="small">Action + Result<textarea id="s_ar" placeholder="I re-scoped the MVP, paired with two juniors… shipped on time, +12% activation."></textarea></label>
+  <button class="btn" onclick="addStory()">Save story to bank</button>
+  <div id="storyList"></div>
+  <div style="margin-top:14px">
+    <label class="small">Generate a STAR answer for this question<input type="text" id="s_gen_q" placeholder="Tell me about a time you disagreed with your manager"></label>
+    <button class="btn" onclick="genStar()">Generate STAR answer</button>
+    <div id="starOut" class="output hidden"></div>
+  </div>
+
+  <h3>Salary Counter-Offer Script Generator</h3>
+  <div class="grid2">
+    <div><label class="small">Their offer ($)<input type="number" id="c_offer" placeholder="85000"></label></div>
+    <div><label class="small">Your target number ($)<input type="number" id="c_target" placeholder="95000"></label></div>
+    <div><label class="small">Competing offer?<select id="c_comp"><option value="no">No</option><option value="yes">Yes</option></select></label></div>
+    <div><label class="small">Your name<input type="text" id="c_name" placeholder="Alex"></label></div>
+  </div>
+  <label class="small">Your 1–2 strongest leverage points<input type="text" id="c_lev" placeholder="I closed $1.2M in new pipeline last year; market data shows $95–105k for this role"></label>
+  <button class="btn" onclick="genCounter()">Generate counter-offer script</button>
+  <div id="counterOut" class="output hidden"></div>
+  <button id="counterCopy" class="btn ghost small hidden" onclick="copyOut('counterOut')">Copy script</button>
+</section>
+
+<!-- ============ PART 3: VALIDATOR ============ -->
+<section id="p3" class="card hidden">
+  <h2>③ Validator</h2>
+  <p class="sub">Two audits. Get both to 100% before the interview — and before you sign anything.</p>
+  <h3>Virtual Interview Setup Audit</h3>
+  <div class="prog"><div id="bar1"></div></div>
+  <div class="small"><span id="pct1">0%</span> complete</div>
+  <div id="audit1"></div>
+  <h3>Offer Review Checklist</h3>
+  <div class="prog"><div id="bar2"></div></div>
+  <div class="small"><span id="pct2">0%</span> complete</div>
+  <div id="audit2"></div>
+  <button class="btn ghost" onclick="window.print()">Print / save as PDF</button>
+  <button class="btn ghost" onclick="resetChecks()">Reset checklists</button>
+</section>
+
+<footer>Interview Confidence Kit · built for job seekers who refuse to leave money on the table.<br>Your answers never leave this browser.</footer>
+</div>
+
+<script>
+"use strict";
+/* ---------- tabs ---------- */
+function show(pid,tid){["p1","p2","p3"].forEach(p=>document.getElementById(p).classList.add("hidden"));
+  ["tab1","tab2","tab3"].forEach(t=>document.getElementById(t).classList.remove("active"));
+  document.getElementById(pid).classList.remove("hidden");document.getElementById(tid).classList.add("active");
+  window.scrollTo({top:0,behavior:"smooth"});}
+
+/* ---------- PART 1: diagnostic ---------- */
+const QUESTIONS=[
+ {t:"I can explain in one sentence what value I'd bring to this role.",d:"prep"},
+ {t:"I have 3+ STAR stories ready that map to this job description.",d:"prep"},
+ {t:"I've researched this company's product, competitors, and recent news.",d:"prep"},
+ {t:"I know my salary target range AND my walk-away number.",d:"salary"},
+ {t:"I could state my number out loud right now without flinching.",d:"salary"},
+ {t:"I have a counter-offer script ready if the first offer is low.",d:"salary"},
+ {t:"In past interviews I've frozen or blanked on easy questions.",d:"anx",rev:true},
+ {t:"'Tell me about yourself' makes my stomach drop.",d:"anx",rev:true},
+ {t:"I rehearse out loud (not just in my head) before interviews.",d:"deliv"},
+ {t:"I have a plan for the final 5 minutes ('Do you have questions for us?').",d:"deliv"}];
+const DIMS={prep:"Preparation",salary:"Salary confidence",anx:"Calm under pressure",deliv:"Delivery & closing"};
+function buildQuiz(){const q=document.getElementById("quiz");q.innerHTML="";
+ QUESTIONS.forEach((it,i)=>{const l=document.createElement("label");l.className="q";
+  l.innerHTML='<span class="qt">'+(i+1)+'. '+it.t+'</span><span class="opts">'+
+   [1,2,3,4,5].map(v=>'<label><input type="radio" name="q'+i+'" value="'+v+'">'+v+'</label>').join("")+
+   '</span><div class="small" style="margin-top:4px">1 = not at all · 5 = completely true</div>';
+  q.appendChild(l);});}
+function scoreQuiz(){const sums={},ns={};
+ for(const k in DIMS){sums[k]=0;ns[k]=0;}
+ let answered=0;
+ QUESTIONS.forEach((it,i)=>{const sel=document.querySelector('input[name="q'+i+'"]:checked');
+  if(sel){answered++;let v=+sel.value;if(it.rev)v=6-v;sums[it.d]+=v;ns[it.d]++;}});
+ if(answered<10){alert("Answer all 10 questions first — it takes 90 seconds.");return;}
+ const pct={};for(const k in DIMS)pct[k]=Math.round((sums[k]/ns[k]-1)/4*100);
+ const overall=Math.round((pct.prep+pct.salary+pct.anx+pct.deliv)/4);
+ const order=Object.keys(pct).sort((a,b)=>pct[a]-pct[b]);
+ const next={prep:"the 60-Second Pitch Builder + STAR Story Bank",salary:"the Counter-Offer Script Generator",
+   anx:"the STAR Story Bank (bank 3 safe stories) + Setup Audit",deliv:"the 60-Second Pitch Builder + Setup Audit"}[order[0]];
+ let color="var(--bad)";if(overall>=70)color="var(--good)";else if(overall>=45)color="var(--warn)";
+ document.getElementById("scoreOut").classList.remove("hidden");
+ document.getElementById("scoreOut").innerHTML=
+  '<div class="scoreRing" style="border-color:'+color+'"><div>'+overall+'</div><div class="small">/100</div></div>'+
+  '<h3>Your dimensions</h3>'+
+  Object.keys(DIMS).map(k=>'<div class="dim"><div class="lbl"><span>'+DIMS[k]+'</span><span>'+pct[k]+'%</span></div>'+
+   '<div class="bar"><div class="fill" style="width:'+pct[k]+'%"></div></div></div>').join("")+
+  '<h3>Your #1 focus: '+DIMS[order[0]]+' ('+pct[order[0]]+'%)</h3>'+
+  '<p>Go to <b>② Generators</b> and start with '+next+'. Re-take this quiz after a practice run — watch the number move.</p>';
+ localStorage.setItem("ick_score",JSON.stringify({overall,pct,at:Date.now()}));}
+function resetQuiz(){buildQuiz();document.getElementById("scoreOut").classList.add("hidden");}
+
+/* ---------- PART 2: generators ---------- */
+function val(id){return document.getElementById(id).value.trim();}
+function showOut(id,btn,text){const o=document.getElementById(id);o.textContent=text;o.classList.remove("hidden");
+ if(btn)document.getElementById(btn).classList.remove("hidden");}
+function copyOut(id){navigator.clipboard.writeText(document.getElementById(id).textContent).then(()=>alert("Copied!"));}
+
+function genPitch(){const n=val("p_name")||"[Your name]",r=val("p_role")||"[the role]",
+ y=val("p_years")||"[X]",w=val("p_win")||"[a key result with a number]",why=val("p_why")||"[what excites you about them]";
+ const t="\"Thanks for asking — I'm "+n+". I'm a "+r.toLowerCase()+" with "+y+" years in the field. "+
+ "The thread through my career is delivering measurable results — most recently, I "+w+". "+
+ "What draws me here is "+why+", and I see a direct line between what I've done and the problems your team is solving. "+
+ "In the first 90 days I'd focus on learning your stack and customers fast, then shipping one visible win in the first quarter. "+
+ "I'm excited to dig into how that maps to what you need most right now.\"";
+ showOut("pitchOut","pitchCopy",t);}
+
+let stories=[];
+try{stories=JSON.parse(localStorage.getItem("ick_stories")||"[]");}catch(e){stories=[];}
+function addStory(){const skill=val("s_skill"),q=val("s_q"),st=val("s_st"),ar=val("s_ar");
+ if(!skill||!st||!ar){alert("Fill in at least the skill, situation, and action fields.");return;}
+ stories.push({skill,q,st,ar});localStorage.setItem("ick_stories",JSON.stringify(stories));renderStories();
+ ["s_skill","s_q","s_st","s_ar"].forEach(id=>document.getElementById(id).value="");}
+function delStory(i){stories.splice(i,1);localStorage.setItem("ick_stories",JSON.stringify(stories));renderStories();}
+function renderStories(){const el=document.getElementById("storyList");
+ el.innerHTML=stories.length?stories.map((s,i)=>'<div class="story"><button class="del" onclick="delStory('+i+')" title="Delete">✕</button>'+
+  '<b>Skill:</b> '+esc(s.skill)+(s.q?' · <b>Answers:</b> '+esc(s.q):"")+
+  '<br><b>S/T:</b> '+esc(s.st)+'<br><b>A/R:</b> '+esc(s.ar)+'</div>').join(""):
+  '<p class="small">No stories banked yet. Aim for 3–5.</p>';}
+function esc(s){return s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
+function genStar(){const q=val("s_gen_q");
+ if(!q){alert("Type the interview question first.");return;}
+ if(!stories.length){alert("Bank at least one story first, above.");return;}
+ const s=stories[0];
+ const t="Q: "+q+"\n\n\"Great question. "+s.st+" My task was clear — I needed to deliver despite that. "+
+ "What I did: "+s.ar+" That experience is exactly why I lead with "+s.skill+" — and it's directly relevant here.\""+
+ "\n\n— Built from your banked story: \""+s.skill+"\" ("+stories.length+" stor"+(stories.length>1?"ies":"y")+" banked). Swap in a better-matching story from your bank if you have one.";
+ showOut("starOut",null,t);}
+
+function genCounter(){const offer=+val("c_offer")||0,target=+val("c_target")||0,
+ comp=val("c_comp"),name=val("c_name")||"there",lev=val("c_lev")||"my track record and current market data";
+ if(!offer||!target){alert("Enter the offer and your target number.");return;}
+ const pct=Math.round((target-offer)/offer*100);
+ const script="PHONE SCRIPT — read, then make it yours:\n\n"+
+ "\"Hi "+name+", thank you so much for the offer — I'm genuinely excited about the team and the role. "+
+ "I want to be transparent: based on "+lev+", I was targeting closer to $"+target.toLocaleString()+
+ " (about "+pct+"% above the current offer of $"+offer.toLocaleString()+")."+
+ (comp==="yes"?" I do have a competing process at a similar stage, but this role is my first choice — ":" ")+
+ " Is there flexibility to get to $"+target.toLocaleString()+"? I'm ready to sign once we land in that range.\"\n\n"+
+ "EMAIL VERSION (if they ask you to put it in writing):\n\n"+
+ "Subject: Re: Offer — excited, one question on comp\n\n"+
+ "\"Hi "+name+",\n\nThank you for the offer — I'm excited about joining. Before I sign, I want to discuss base compensation. "+
+ "Given "+lev+", a base of $"+target.toLocaleString()+" reflects the value I'll bring. "+
+ "Can we meet there? I'm confident we can close this out quickly.\n\nBest,\"\n\n"+
+ "RULES: never accept on the spot · always counter once · silence after your number is your friend · get the final number in writing.";
+ showOut("counterOut","counterCopy",script);}
+
+/* ---------- PART 3: validator ---------- */
+const AUDIT1=["Camera at eye level (stack of books counts)","Face a window or lamp — light in FRONT of you, not behind",
+ "Test mic + speakers in the actual meeting app (not just once)","Quiet room, door closed, notifications silenced",
+ "Background tidy or blurred; nothing embarrassing visible","Phone on Do Not Disturb, backup device charged",
+ "Join link tested, app updated, backup dial-in number saved","Glass of water, pen, printed resume + 3 questions within reach",
+ "Full outfit interview-ready (yes, even the bottom half)","Log in 10 min early; close every other heavy app/tab"];
+const AUDIT2=["Base salary confirmed IN WRITING (not just verbal)","Bonus structure: target %, payout history, first-year guarantee?",
+ "Equity/RSUs: total grant, vesting schedule, cliff, strike price","Benefits: health premiums, 401k match, PTO days, parental leave",
+ "Start date + title + reporting manager confirmed","Remote/hybrid terms spelled out (days in office?)",
+ "Non-compete / IP assignment reviewed — anything that blocks side work?","Severance terms if role is eliminated in year one",
+ "I countered at least once (even if only +3–5%)","Deadline to decide negotiated (never sign same-day)"];
+function buildAudits(){mk("audit1","bar1","pct1",AUDIT1,"ick_a1");mk("audit2","bar2","pct2",AUDIT2,"ick_a2");}
+function mk(el,bar,pct,items,key){let saved={};try{saved=JSON.parse(localStorage.getItem(key)||"{}");}catch(e){}
+ const host=document.getElementById(el);host.innerHTML="";
+ items.forEach((t,i)=>{const l=document.createElement("label");l.className="check";
+  const c=document.createElement("input");c.type="checkbox";c.checked=!!saved[i];
+  c.onchange=()=>{saved[i]=c.checked;localStorage.setItem(key,JSON.stringify(saved));
+   l.classList.toggle("done",c.checked);upd();};
+  l.className="check"+(c.checked?" done":"");l.appendChild(c);
+  const sp=document.createElement("span");sp.textContent=t;l.appendChild(sp);host.appendChild(l);});
+ function upd(){const boxes=host.querySelectorAll('input[type=checkbox]');
+  const done=[...boxes].filter(b=>b.checked).length;
+  document.getElementById(bar).style.width=Math.round(done/boxes.length*100)+"%";
+  document.getElementById(pct).textContent=Math.round(done/boxes.length*100)+"% complete";}
+ upd();host._upd=upd;}
+function resetChecks(){["ick_a1","ick_a2"].forEach(k=>localStorage.removeItem(k));buildAudits();}
+
+/* ---------- init ---------- */
+buildQuiz();buildAudits();renderStories();
+</script>
+</body>
+</html>
